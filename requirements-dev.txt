@@ -1,0 +1,5 @@
+-r user_service/requirements.txt
+-r gateway_service/requirements.txt
+-r book_service/requirements.txt
+-r borrow_service/requirements.txt
+pytest>=8,<10

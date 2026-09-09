@@ -1,0 +1,33 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  server:
+    # 单机 Eureka 且是实验环境，关闭自我保护、缩短剔除周期，
+    # 这样服务下线/上线能更快在面板上反映出来，方便调试和截图。
+    # 与指导书 2.3.2.2 节一致，正式生产环境不建议这样配。
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 4000
+    wait-time-in-ms-when-sync-empty: 0
+    response-cache-update-interval-ms: 4
+    renewal-percent-threshold: 0.49
+  client:
+    # 单机 Eureka Server，自己不需要向自己注册，也不需要拉取注册表
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+# 说明：
+# 1. python 端（gateway_service / user_service / book_service / borrow_service）
+#    的 README 里默认约定 EUREKA_SERVER=http://<eureka-ip>:8761/eureka/，
+#    正好对应这里的端口 8761，不需要改 python 侧代码。
+# 2. 如果部署到多台虚拟机/服务器，把上面的 hostname 换成 Eureka Server 所在
+#    机器的真实 IP，并保证 8761 端口在防火墙里放行。
