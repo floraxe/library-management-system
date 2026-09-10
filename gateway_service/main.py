@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request, Response
 from py_eureka_client.eureka_client import EurekaClient
 
 from .auth_filter import jwt_auth_filter
+from .rate_limiter import rate_limit_filter
 from .routes import forward_request
 
 
@@ -59,6 +60,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(title="Library API Gateway", lifespan=lifespan)
 app.middleware("http")(jwt_auth_filter)
+app.middleware("http")(rate_limit_filter)
 
 
 @app.post("/auth/register")
